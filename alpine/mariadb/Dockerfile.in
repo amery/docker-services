@@ -1,0 +1,9 @@
+# vim: set ts=4 sw=4 et:
+FROM @USER@/docker-alpine-core:latest
+MAINTAINER @MAINTAINER@
+
+# Install MariaDB
+RUN apk upgrade -U \
+    && apk --update add \
+        mariadb \
+    && rm -rf /var/cache/apk/*
