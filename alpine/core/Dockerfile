@@ -10,4 +10,6 @@ RUN apk upgrade -U \
 
 COPY supervisord.conf /etc/
 
+RUN mkdir -p /var/log/supervisor
+
 ENTRYPOINT [ "/usr/bin/supervisord" ]
