@@ -1,4 +1,9 @@
 DOCKER=docker
+ifneq ($(PUSH),)
+DOCKER_PUSH=$(DOCKER) push
+else
+DOCKER_PUSH=true
+endif
 
 ifneq ($(FORCE),)
 DOCKER_BUILD_OPT=--rm --pull --no-cache
@@ -28,14 +33,15 @@ include images.mk
 build-images: $(IMAGES)
 
 %/Dockerfile: %/Dockerfile.in
-	sed -e 's|@USER@|$(USER)|g' -e 's|@MAINTAINER@|$(MAINTAINER)|g' $^ > $@
+	@sed -e 's|@USER@|$(USER)|g' -e 's|@MAINTAINER@|$(MAINTAINER)|g' $^ > $@
 
 $(SENTINELS):
-	$(DOCKER) build $(DOCKER_BUILD_OPT) -t $(PREFIX)$(NAME):latest $(DIR)/
-	if [ ! -x "$(DIR)/get_version.sh" ]; then \
-		: ; \
+	@$(DOCKER) build $(DOCKER_BUILD_OPT) -t $(PREFIX)$(NAME):latest $(DIR)/
+	@if [ ! -x "$(DIR)/get_version.sh" ]; then \
+		$(DOCKER_PUSH) $(PREFIX)$(NAME):latest; \
 	elif V=$$($(DIR)/get_version.sh $(PREFIX)$(NAME):latest); then \
 		$(DOCKER) tag $(PREFIX)$(NAME):latest $(PREFIX)$(NAME):$$V; \
+		$(DOCKER_PUSH) $(PREFIX)$(NAME):latest $(PREFIX)$(NAME):$$V; \
 	fi
-	mkdir -p $(@D)
-	touch $@
+	@mkdir -p $(@D)
+	@touch $@
