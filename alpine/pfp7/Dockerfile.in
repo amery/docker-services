@@ -1,4 +1,4 @@
-# vim: set ts=4 sw=4 et:
+# vim: set ft=dockerfile ts=4 sw=4 et:
 FROM @USER@/docker-alpine-core:latest
 MAINTAINER @MAINTAINER@
 
