@@ -6,7 +6,10 @@ else
 DOCKER_BUILD_OPT=--rm
 endif
 
-PREFIX=$(shell id -urn)/
+USER=$(shell id -urn)
+MAINTAINER=$(shell git config user.name) <$(shell git config user.email)>
+
+PREFIX=$(USER)/
 B=$(CURDIR)
 
 .PHONY: all build-images clean
@@ -23,3 +26,6 @@ clean:
 include images.mk
 
 build-images: $(IMAGES)
+
+%/Dockerfile: %/Dockerfile.in
+	sed -e 's|@USER@|$(USER)|g' -e 's|@MAINTAINER@|$(MAINTAINER)|g' $^ > $@
