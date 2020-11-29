@@ -1,0 +1,3 @@
+# vim: set ts=4 sw=4 et:
+FROM amery/docker-alpine-pfp7:latest
+MAINTAINER Alejandro Mery <amery@linux.com>
