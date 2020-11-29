@@ -2,7 +2,7 @@
 FROM amery/docker-alpine-core:latest
 MAINTAINER Alejandro Mery <amery@linux.com>
 
-# Install PHP7
+# Install MariaDB
 RUN apk upgrade -U \
     && apk --update add \
         mariadb \
