@@ -29,3 +29,13 @@ build-images: $(IMAGES)
 
 %/Dockerfile: %/Dockerfile.in
 	sed -e 's|@USER@|$(USER)|g' -e 's|@MAINTAINER@|$(MAINTAINER)|g' $^ > $@
+
+$(SENTINELS):
+	$(DOCKER) build $(DOCKER_BUILD_OPT) -t $(PREFIX)$(NAME):latest $(DIR)/
+	if [ ! -x "$(DIR)/get_version.sh" ]; then \
+		: ; \
+	elif V=$$($(DIR)/get_version.sh $(PREFIX)$(NAME):latest); then \
+		$(DOCKER) tag $(PREFIX)$(NAME):latest $(PREFIX)$(NAME):$$V; \
+	fi
+	mkdir -p $(@D)
+	touch $@
