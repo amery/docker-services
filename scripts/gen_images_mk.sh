@@ -13,8 +13,6 @@ for df in $(find * -type f -name Dockerfile); do
 }$name"
 done
 
-[ -n "$IMAGES" ] || exit 0
-
 # sort
 IMAGES="$(echo "$IMAGES" | sort -V)"
 FILES="$(echo "$FILES" | sort -V)"
@@ -25,14 +23,6 @@ cat <<EOT
 #
 IMAGES =$(echo "$IMAGES" | sed -e 's/^/|\t$(PREFIX)/' | tr -d '\n' | sed -e 's/|/ \\\n/g')
 EOT
-
-for img in $IMAGES; do
-	cat <<EOT
-
-.PHONY: \$(PREFIX)$img
-\$(PREFIX)$img: \$(B)/.$img
-EOT
-done
 
 for np in $FILES; do
 	img="${np%:*}"
@@ -49,11 +39,14 @@ for np in $FILES; do
 		[ -z "$from" ] || break
 	done
 	cat <<EOT
+# $df
+#
+.PHONY: \$(PREFIX)$img
+\$(PREFIX)$img: \$(B)/.$img
 
-\$(B)/.$img:${from:+ \$(B)/.$from}
+\$(B)/.$img:${from:+ \$(B)/.$from} $df
 	\$(DOCKER) build \$(DOCKER_BUILD_OPT) -t \$(PREFIX)$img:latest $d/
 	mkdir -p \$(@D)
 	touch \$@
-
 EOT
 done
