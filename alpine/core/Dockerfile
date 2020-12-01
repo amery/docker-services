@@ -3,10 +3,8 @@ FROM alpine:latest
 MAINTAINER Alejandro Mery <amery@linux.com>
 
 # Install Supervisor
-RUN apk upgrade -U \
-    && apk --update add \
-        supervisor \
-    && rm -rf /var/cache/apk/*
+RUN apk --update upgrade -U && apk --no-cache add \
+        supervisor
 
 COPY supervisord.conf /etc/
 

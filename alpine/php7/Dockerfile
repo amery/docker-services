@@ -3,8 +3,7 @@ FROM amery/docker-alpine-core:latest
 MAINTAINER Alejandro Mery <amery@linux.com>
 
 # Install PHP7
-RUN apk upgrade -U \
-    && apk --update add \
+RUN apk --update upgrade -U && apk --no-cache add \
         php7 \
         php7-ctype \
         php7-curl \
@@ -27,8 +26,7 @@ RUN apk upgrade -U \
         php7-session \
         php7-tidy \
         php7-xml \
-        php7-zip \
-    && rm -rf /var/cache/apk/*
+        php7-zip
 
 # append supervisord.conf
 COPY supervisord.conf /etc/supervisord.conf~

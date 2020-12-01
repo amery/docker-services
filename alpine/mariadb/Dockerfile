@@ -3,7 +3,5 @@ FROM amery/docker-alpine-core:latest
 MAINTAINER Alejandro Mery <amery@linux.com>
 
 # Install MariaDB
-RUN apk upgrade -U \
-    && apk --update add \
-        mariadb \
-    && rm -rf /var/cache/apk/*
+RUN apk --update upgrade -U && apk --no-cache add \
+        mariadb
