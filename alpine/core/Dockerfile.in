@@ -1,6 +1,6 @@
 # vim: set ft=dockerfile ts=4 sw=4 et:
 FROM alpine:latest
-MAINTAINER @MAINTAINER@
+MAINTAINER @@MAINTAINER@@
 
 # Install Supervisor
 RUN apk --update upgrade -U && apk --no-cache add \

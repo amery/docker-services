@@ -33,7 +33,7 @@ include images.mk
 build-images: $(IMAGES)
 
 %/Dockerfile: %/Dockerfile.in
-	@sed -e 's|@USER@|$(USER)|g' -e 's|@MAINTAINER@|$(MAINTAINER)|g' $^ > $@
+	@sed -e 's|@@USER@@|$(USER)|g' -e 's|@@MAINTAINER@@|$(MAINTAINER)|g' $^ > $@
 
 $(SENTINELS):
 	@$(DOCKER) build $(DOCKER_BUILD_OPT) -t $(PREFIX)$(NAME):latest $(DIR)/
