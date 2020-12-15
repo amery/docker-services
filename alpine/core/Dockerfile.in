@@ -10,4 +10,4 @@ COPY supervisord.conf /etc/
 
 RUN mkdir -p /var/log/supervisor
 
-ENTRYPOINT [ "/usr/bin/supervisord" ]
+ENTRYPOINT [ "/usr/bin/supervisord", "-c", "/etc/supervisord.conf" ]
