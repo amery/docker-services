@@ -22,11 +22,17 @@ RUN apk --update upgrade -U && apk --no-cache add \
         php7-pcntl \
         php7-pdo \
         php7-pdo_mysql \
+        php7-phar \
         php7-posix \
         php7-session \
         php7-tidy \
         php7-xml \
         php7-zip
+
+# php-composer
+RUN apk --no-cache add curl && \
+        curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
+        apk del curl
 
 # listen all interfaces
 RUN sed -i -e 's|^listen =.*|listen = 9000|' /etc/php7/php-fpm.d/www.conf
