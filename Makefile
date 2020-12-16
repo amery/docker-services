@@ -1,9 +1,4 @@
 DOCKER=docker
-ifneq ($(PUSH),)
-DOCKER_PUSH=$(DOCKER) push
-else
-DOCKER_PUSH=true
-endif
 
 ifneq ($(FORCE),)
 DOCKER_BUILD_OPT=--rm --pull --no-cache
@@ -17,7 +12,7 @@ MAINTAINER=$(shell git config user.name) <$(shell git config user.email)>
 PREFIX=$(USER)/
 B=$(CURDIR)
 
-.PHONY: all build-images clean
+.PHONY: all build-images push clean
 
 all: build-images
 
@@ -32,16 +27,22 @@ include images.mk
 
 build-images: $(IMAGES)
 
+push: $(PUSHERS)
+
 %/Dockerfile: %/Dockerfile.in
 	@sed -e 's|@@USER@@|$(USER)|g' -e 's|@@MAINTAINER@@|$(MAINTAINER)|g' $^ > $@
 
 $(SENTINELS):
-	@$(DOCKER) build $(DOCKER_BUILD_OPT) -t $(PREFIX)$(NAME):latest $(DIR)/
-	@if [ ! -x "$(DIR)/get_version.sh" ]; then \
-		$(DOCKER_PUSH) $(PREFIX)$(NAME):latest; \
-	elif V=$$($(DIR)/get_version.sh $(PREFIX)$(NAME):latest); then \
-		$(DOCKER) tag $(PREFIX)$(NAME):latest $(PREFIX)$(NAME):$$V; \
-		$(DOCKER_PUSH) $(PREFIX)$(NAME):latest $(PREFIX)$(NAME):$$V; \
-	fi
+	$(DOCKER) build $(DOCKER_BUILD_OPT) -t $(PREFIX)$(NAME):latest $(DIR)/
 	@mkdir -p $(@D)
-	@touch $@
+	@echo $(PREFIX)$(NAME):latest > $@~
+	@if [ -x $(DIR)/get_version.sh ]; then \
+		for V in $$($(DIR)/get_version.sh $(PREFIX)$(NAME):latest); do \
+			$(DOCKER) tag $(PREFIX)$(NAME):latest $(PREFIX)$(NAME):$$V; \
+			echo $$V >> $@~; \
+		done; \
+	fi
+	@mv $@~ $@
+
+$(PUSHERS):
+	@xargs -rt $(DOCKER) push < $<

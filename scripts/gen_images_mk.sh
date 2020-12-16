@@ -23,6 +23,7 @@ cat <<EOT
 #
 IMAGES =$(echo "$IMAGES" | sed -e 's:^:|\t$(PREFIX):' | tr -d '\n' | sed -e 's/|/ \\\n/g')
 SENTINELS =$(echo "$IMAGES" | sed -e 's:^:|\t$(B)/.:' | tr -d '\n' | sed -e 's/|/ \\\n/g')
+PUSHERS =$(echo "$IMAGES" | sed -e 's:^:|\tpush-:' | tr -d '\n' | sed -e 's/|/ \\\n/g')
 EOT
 
 for np in $FILES; do
@@ -45,6 +46,9 @@ for np in $FILES; do
 #
 .PHONY: \$(PREFIX)$img
 \$(PREFIX)$img: \$(B)/.$img
+
+.PHONY: push-$img
+push-$img: \$(B)/.$img
 
 \$(B)/.$img:${from:+ \$(B)/.$from} $df
 \$(B)/.$img: NAME=$img
