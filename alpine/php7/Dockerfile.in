@@ -39,7 +39,5 @@ RUN wget -qO /tmp/composer-setup.php https://getcomposer.org/installer && \
 # listen all interfaces
 RUN sed -i -e 's|^listen =.*|listen = 9000|' /etc/php7/php-fpm.d/www.conf
 
-# append supervisord.conf
-COPY supervisord.conf /etc/supervisord.conf~
-RUN cat /etc/supervisord.conf~ >> /etc/supervisord.conf \
-    && rm -f /etc/supervisord.conf~
+# add php-fpm to supervisord
+COPY supervisord.conf /etc/supervisor.d/php-fpm.conf
