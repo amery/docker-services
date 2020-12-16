@@ -6,8 +6,12 @@ MAINTAINER @@MAINTAINER@@
 RUN apk --update upgrade -U && apk --no-cache add \
         supervisor
 
+RUN mkdir -p \
+    /etc/entrypoint.d \
+    /etc/supervisor.d \
+    /var/log/supervisor
+
 COPY supervisord.conf /etc/
+COPY entrypoint.sh /
 
-RUN mkdir -p /var/log/supervisor /etc/supervisor.d
-
-ENTRYPOINT [ "/usr/bin/supervisord", "-c", "/etc/supervisord.conf" ]
+ENTRYPOINT [ "/entrypoint.sh" ]
