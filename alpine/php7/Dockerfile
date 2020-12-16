@@ -28,6 +28,9 @@ RUN apk --update upgrade -U && apk --no-cache add \
         php7-xml \
         php7-zip
 
+# listen all interfaces
+RUN sed -i -e 's|^listen =.*|listen = 9000|' /etc/php7/php-fpm.d/www.conf
+
 # append supervisord.conf
 COPY supervisord.conf /etc/supervisord.conf~
 RUN cat /etc/supervisord.conf~ >> /etc/supervisord.conf \
