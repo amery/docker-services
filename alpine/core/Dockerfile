@@ -8,6 +8,6 @@ RUN apk --update upgrade -U && apk --no-cache add \
 
 COPY supervisord.conf /etc/
 
-RUN mkdir -p /var/log/supervisor
+RUN mkdir -p /var/log/supervisor /etc/supervisor.d
 
 ENTRYPOINT [ "/usr/bin/supervisord", "-c", "/etc/supervisord.conf" ]
