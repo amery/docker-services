@@ -2,8 +2,6 @@
 
 set -e
 
-exec 3>&2
-
 ME=$(basename $0)
 
 auto_envsubst() {
