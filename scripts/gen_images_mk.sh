@@ -4,11 +4,11 @@ set -eu
 
 FILES=
 IMAGES=
-for df in $(find * -type f -name Dockerfile); do
-	name="docker-$(echo ${df%/*} | tr '/' '-')"
+for d; do
+	name="docker-$(echo $d | tr '/' '-')"
 
 	FILES="${FILES:+$FILES
-}$name:$df"
+}$name:$d/Dockerfile"
 	IMAGES="${IMAGES:+$IMAGES
 }$name"
 done

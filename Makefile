@@ -26,6 +26,7 @@ IMAGE_MK_VARS = $(shell $(GET_VARS_SH) $(TEMPLATES))
 RULES_MK = rules.mk
 CONFIG_MK = config.mk
 IMAGES_MK = images.mk
+IMAGE_DIRS = .images.mk
 
 .PHONY: all build-images push clean
 
@@ -39,9 +40,13 @@ $(CONFIG_MK): $(CONFIG_MK_SH) $(TEMPLATES) Makefile
 	$< $@ $(IMAGE_MK_VARS)
 	touch $@
 
-$(IMAGES_MK): $(GEN_IMAGES_MK_SH) Makefile
-	$^ > $@~
+$(IMAGES_MK): $(GEN_IMAGES_MK_SH) $(IMAGE_DIRS) Makefile
+	xargs -r $< < $(IMAGE_DIRS) > $@~
 	mv $@~ $@
+
+$(IMAGE_DIRS): FORCE
+	@echo $(FILES) | tr ' ' '\n' | sed -e 's|/[^/]\+$$||' | sort -uV > $@~
+	@if ! cmp -s $@~ $@; then mv $@~ $@; else rm $@~; fi
 
 clean:
 	rm -f $(B)/.docker-* images.mk *~
@@ -68,3 +73,6 @@ $(SENTINELS):
 
 $(PUSHERS):
 	@xargs -rt $(DOCKER) push < $<
+
+.PHONY: FORCE
+FORCE:
