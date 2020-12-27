@@ -1,2 +1,3 @@
+rules.mk
 images.mk
 .docker-*
