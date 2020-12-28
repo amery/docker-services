@@ -28,9 +28,15 @@ CONFIG_MK = config.mk
 IMAGES_MK = images.mk
 IMAGE_DIRS = .images.mk
 
-.PHONY: all build-images push clean
+.PHONY: all clean images push
 
-all: build-images
+all: images
+
+clean:
+	rm -f $(B)/.docker-* $(IMAGES_MK) *~
+
+.PHONY: FORCE
+FORCE:
 
 $(RULES_MK): $(GEN_RULES_MK_SH) $(TEMPLATES) Makefile
 	$< $(IMAGE_MK_VARS) > $@~
@@ -45,18 +51,15 @@ $(IMAGES_MK): $(GEN_IMAGES_MK_SH) $(IMAGE_DIRS) Makefile
 	mv $@~ $@
 
 $(IMAGE_DIRS): FORCE
-	@echo $(FILES) | tr ' ' '\n' | sed -e 's|/[^/]\+$$||' | sort -uV > $@~
+	@find * -name Dockerfile -o -name Dockerfile.in | \
+		sed -e 's|/[^/]\+$$||' | sort -uV > $@~
 	@if ! cmp -s $@~ $@; then mv $@~ $@; else rm $@~; fi
-
-clean:
-	rm -f $(B)/.docker-* images.mk *~
 
 include $(RULES_MK)
 include $(CONFIG_MK)
 include $(IMAGES_MK)
 
-build-images: $(IMAGES)
-
+images: $(IMAGES)
 push: $(PUSHERS)
 
 $(SENTINELS):
@@ -73,6 +76,3 @@ $(SENTINELS):
 
 $(PUSHERS):
 	@xargs -rt $(DOCKER) push < $<
-
-.PHONY: FORCE
-FORCE:
