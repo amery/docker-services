@@ -12,7 +12,6 @@ RUN apk add --no-cache musl-utils \
     && getent group www-data || addgroup -g 82 -S www-data \
     && getent passwd www-data || adduser -S -D -H -u 82 -h /var/www -s /sbin/nologin -G www-data -g www-data www-data
 
-
 # The following will be installed from upstream:
 # nginx nginx-module-xslt nginx-module-geoip nginx-module-image-filter nginx-module-njs
 # First we make sure the keys are allright
@@ -48,3 +47,5 @@ COPY supervisord.conf /etc/supervisor.d/nginx.conf
 #load_module modules/ngx_http_js_module.so;
 #load_module modules/ngx_stream_js_module.so;
 #load_module modules/ngx_http_xslt_filter_module.so;
+
+EXPOSE 80
