@@ -9,7 +9,6 @@ D=/var/lib/mysql
 H=$(hostname)
 
 [ -d "$R" ] || mkdir "$R"
-ln -snf /dev/stderr "$D/mysql.err"
 chown -R $U:$U "$R" "$D"
 
 escape() {
