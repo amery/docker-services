@@ -9,6 +9,7 @@ RUN apk --update upgrade -U && apk --no-cache add \
 
 EXPOSE 3306
 
+COPY user_env /etc/entrypoint.d/
 COPY mysql.sh /etc/entrypoint.d/
 COPY my.cnf /etc/my.cnf.d/mysql.cnf
 COPY supervisord.conf /etc/supervisor.d/mysqld.conf

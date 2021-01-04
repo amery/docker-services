@@ -3,9 +3,7 @@
 exec >&3
 set -eu
 
-U=${USER_NAME:-mysql}
-export "USER_NAME=$U"
-
+U="$USER_NAME"
 R=/var/run/mysqld
 D=/var/lib/mysql
 H=$(hostname)
