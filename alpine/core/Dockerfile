@@ -2,9 +2,10 @@
 FROM alpine:latest
 MAINTAINER Alejandro Mery <amery@linux.com>
 
-# Install Supervisor
+# Install Supervisor and getent
 RUN apk --update upgrade -U && apk --no-cache add \
-        supervisor
+    musl-utils \
+    supervisor
 
 RUN mkdir -p \
     /etc/entrypoint.d \

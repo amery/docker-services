@@ -9,21 +9,33 @@ fi
 set -eu
 
 if [ -n "${USER_UID:-}" ]; then
-	export USER_NAME="${USER_NAME:-appuser}"
-	export USER_GID="${USER_GID:-$USER_UID}"
-	export USER_HOME="${USER_HOME:-/home/$USER_NAME}"
-	export USER_SHELL="${USER_SHELL:-/sbin/nologin}"
 
-	addgroup -S -g "$USER_GID" "$USER_NAME"
+	: ${USER_NAME:=appuser}
+	: ${USER_GID:=$USER_UID}
+	: ${USER_HOME:=/home/$USER_NAME}
+	: ${USER_SHELL:=/sbin/nologin}
 
-	opt="-S -D"
-	[ ! -d "$USER_HOME" ] || opt="$opt -H"
+	if ! getent group "$USER_NAME"; then
+		addgroup -S -g "$USER_GID" "$USER_NAME"
+	fi
 
-	adduser $opt \
-		-s "$USER_SHELL" -h "$USER_HOME" \
-		-G "$USER_NAME" -g "$USER_NAME"  \
-		-u "$USER_UID" "$USER_NAME"
+	if ! getent passwd "$USER_NAME"; then
+		opt="-S -D"
+
+		[ ! -d "$USER_HOME" ] || opt="$opt -H"
+
+		adduser $opt \
+			-s "$USER_SHELL" -h "$USER_HOME" \
+			-G "$USER_NAME" -g "$USER_NAME"  \
+			-u "$USER_UID" "$USER_NAME"
+	fi
+elif [ -s /etc/entrypoint.d/user_env ]; then
+	. /etc/entrypoint.d/user_env
+
+	: ${USER_NAME:=appuser}
 fi
+
+export USER_NAME
 
 for x in /etc/entrypoint.d/*; do
 	if [ -f "$x" -a -x "$x" ]; then
