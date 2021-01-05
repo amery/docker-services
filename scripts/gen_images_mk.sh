@@ -4,11 +4,11 @@ set -eu
 
 FILES=
 IMAGES=
-for df in $(find * -type f -name Dockerfile); do
-	name="docker-$(echo ${df%/*} | tr '/' '-')"
+for d; do
+	name="docker-$(echo $d | tr '/' '-')"
 
 	FILES="${FILES:+$FILES
-}$name:$df"
+}$name:$d/Dockerfile"
 	IMAGES="${IMAGES:+$IMAGES
 }$name"
 done
@@ -16,6 +16,26 @@ done
 # sort
 IMAGES="$(echo "$IMAGES" | sort -V)"
 FILES="$(echo "$FILES" | sort -V)"
+
+image_files() {
+	local d="$1" df="$2"
+	shift 2
+
+	(
+	for x; do
+		echo "$x"
+	done
+
+	echo "$df"
+
+	find "$d" ! -type d | while read x; do
+		if [ "$x" != "$df.in" -a "$x" != "$df" ]; then
+			echo "$x"
+		fi
+	done
+	) | sort -uV | tr '\n' '|' |
+                sed -e 's,|$,,' -e 's,|, \\\n\t,g'
+}
 
 # generate list of managed images
 cat <<EOT
@@ -50,7 +70,8 @@ for np in $FILES; do
 .PHONY: push-$img
 push-$img: \$(B)/.$img
 
-\$(B)/.$img:${from:+ \$(B)/.$from} $df
+\$(B)/.$img: \\
+	$(image_files "$d" "$df" ${from:+"\$(B)/.$from"})
 \$(B)/.$img: NAME=$img
 \$(B)/.$img: DIR=$d
 EOT

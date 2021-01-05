@@ -2,15 +2,18 @@
 FROM alpine:latest
 MAINTAINER Alejandro Mery <amery@linux.com>
 
-# Install Supervisor
+# Install Supervisor, S6 and getent
 RUN apk --update upgrade -U && apk --no-cache add \
-        supervisor
+    musl-utils \
+    s6 \
+    supervisor
 
 RUN mkdir -p \
     /etc/entrypoint.d \
     /etc/supervisor.d \
     /var/log/supervisor
 
+COPY run-user.sh /usr/bin/run-user
 COPY supervisord.conf /etc/
 COPY entrypoint.sh /
 

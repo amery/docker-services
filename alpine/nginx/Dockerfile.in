@@ -6,13 +6,6 @@ ENV NGINX_VERSION 1.19.6
 ENV NJS_VERSION   0.5.0
 ENV PKG_RELEASE   1
 
-# We will want NginX running under user www-data (id 82)
-# We make sure www-data user and group exists
-RUN apk add --no-cache musl-utils \
-    && getent group www-data || addgroup -g 82 -S www-data \
-    && getent passwd www-data || adduser -S -D -H -u 82 -h /var/www -s /sbin/nologin -G www-data -g www-data www-data
-
-
 # The following will be installed from upstream:
 # nginx nginx-module-xslt nginx-module-geoip nginx-module-image-filter nginx-module-njs
 # First we make sure the keys are allright
@@ -37,6 +30,7 @@ RUN set -x \
     && apk add -X "https://nginx.org/packages/mainline/alpine/v$(egrep -o '^[0-9]+\.[0-9]+' /etc/alpine-release)/main" --no-cache $nginxPackages
 
 # add nginx to supervisord
+COPY user_env /etc/entrypoint.d
 COPY 10-listen-on-ipv6-by-default.sh /etc/entrypoint.d
 COPY 20-envsubst-on-templates.sh /etc/entrypoint.d
 COPY supervisord.conf /etc/supervisor.d/nginx.conf
@@ -48,3 +42,5 @@ COPY supervisord.conf /etc/supervisor.d/nginx.conf
 #load_module modules/ngx_http_js_module.so;
 #load_module modules/ngx_stream_js_module.so;
 #load_module modules/ngx_http_xslt_filter_module.so;
+
+EXPOSE 80
