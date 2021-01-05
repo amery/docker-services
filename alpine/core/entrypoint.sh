@@ -8,6 +8,8 @@ fi
 
 set -eu
 
+# create appuser
+#
 if [ -n "${USER_UID:-}" ]; then
 
 	: ${USER_NAME:=appuser}
@@ -31,12 +33,17 @@ if [ -n "${USER_UID:-}" ]; then
 	fi
 elif [ -s /etc/entrypoint.d/user_env ]; then
 	. /etc/entrypoint.d/user_env
-
-	: ${USER_NAME:=appuser}
 fi
 
+: ${USER_NAME:=appuser}
 export USER_NAME
 
+# prepare `run-user` helper
+#
+sed -i -e "s|@@USER_NAME@@|$USER_NAME|g" /usr/bin/run-user
+
+# run-once scripts
+#
 for x in /etc/entrypoint.d/*; do
 	if [ -f "$x" -a -x "$x" ]; then
 		echo "$0: $x"

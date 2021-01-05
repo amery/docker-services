@@ -13,6 +13,7 @@ RUN mkdir -p \
     /etc/supervisor.d \
     /var/log/supervisor
 
+COPY run-user.sh /usr/bin/run-user
 COPY supervisord.conf /etc/
 COPY entrypoint.sh /
 
