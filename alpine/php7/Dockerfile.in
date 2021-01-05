@@ -30,11 +30,13 @@ RUN apk --update upgrade -U && apk --no-cache add \
         php7-zip
 
 # php-composer
+ENV COMPOSER_PREFERRED 2
 RUN wget -qO /tmp/composer-setup.php https://getcomposer.org/installer && \
     php /tmp/composer-setup.php --1 --install-dir=/usr/bin --filename=composer1 && \
     php /tmp/composer-setup.php --2 --install-dir=/usr/bin --filename=composer2 && \
-    ln -s composer2 /usr/bin/composer && \
     rm /tmp/composer-setup.php
+
+COPY 00-prepare-php7.sh /etc/entrypoint.d/
 
 # listen all interfaces
 RUN sed -i -e 's|^listen =.*|listen = 9000|' /etc/php7/php-fpm.d/www.conf
