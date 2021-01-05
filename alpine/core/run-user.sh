@@ -1,7 +1,8 @@
 #!/bin/sh
 
-set -eux
+set -eu
 U=@@USER_NAME@@
+H=@@USER_HOME@@
 
 if [ $# -eq 0 ]; then
 	cat <<-EOT >&2
@@ -13,7 +14,7 @@ if [ $# -eq 0 ]; then
 fi
 
 if [ "$U" != "root" -a "$(id -ur)" = 0 ]; then
-	set -- s6-setuidgid "$U" "$@"
+	set -- env -i HOME=$H s6-setuidgid "$U" "$@"
 fi
 
 exec "$@"

@@ -35,12 +35,19 @@ elif [ -s /etc/entrypoint.d/user_env ]; then
 	. /etc/entrypoint.d/user_env
 fi
 
-: ${USER_NAME:=appuser}
+: ${USER_NAME:=nobody}
 export USER_NAME
+
+if [ -z "$USER_HOME" ]; then
+	USER_HOME="$(getent passwd "$USER_NAME" | cut -d: -f6)"
+fi
 
 # prepare `run-user` helper
 #
-sed -i -e "s|@@USER_NAME@@|$USER_NAME|g" /usr/bin/run-user
+sed -i \
+	-e "s|@@USER_NAME@@|$USER_NAME|g" \
+	-e "s|@@USER_HOME@@|$USER_HOME|g" \
+	/usr/bin/run-user
 
 # run-once scripts
 #
