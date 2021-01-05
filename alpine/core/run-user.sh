@@ -14,7 +14,8 @@ if [ $# -eq 0 ]; then
 fi
 
 if [ "$U" != "root" -a "$(id -ur)" = 0 ]; then
-	set -- env -i HOME=$H s6-setuidgid "$U" "$@"
+	set -- env -i HOME=$H "PATH=$PATH" s6-setuidgid "$U" "$@"
 fi
 
+set -x
 exec "$@"
