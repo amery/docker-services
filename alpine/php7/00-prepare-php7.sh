@@ -7,7 +7,7 @@ F=/usr/bin/composer
 cat <<EOT > "$F"
 #!/bin/sh
 
-set -eux
+set -eu
 exec run-user php "/usr/bin/composer${COMPOSER_PREFERRED:-2}" "\$@"
 EOT
 chmod +x "$F"
