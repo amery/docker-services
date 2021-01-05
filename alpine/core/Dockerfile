@@ -2,9 +2,10 @@
 FROM alpine:latest
 MAINTAINER Alejandro Mery <amery@linux.com>
 
-# Install Supervisor and getent
+# Install Supervisor, S6 and getent
 RUN apk --update upgrade -U && apk --no-cache add \
     musl-utils \
+    s6 \
     supervisor
 
 RUN mkdir -p \
