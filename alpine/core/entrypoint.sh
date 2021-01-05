@@ -38,7 +38,7 @@ fi
 : ${USER_NAME:=nobody}
 export USER_NAME
 
-if [ -z "$USER_HOME" ]; then
+if [ -z "${USER_HOME:-}" ]; then
 	USER_HOME="$(getent passwd "$USER_NAME" | cut -d: -f6)"
 fi
 
