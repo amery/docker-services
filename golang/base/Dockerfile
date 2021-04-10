@@ -9,3 +9,7 @@ RUN rm -rf root && \
 	mkdir root root/etc root/bin root/data root/tmp && \
 	chmod 01777 root/tmp && \
 	cp /etc/passwd root/etc/
+
+# FROM scratch
+# COPY --from=0 /go/root /
+# USER nobody
