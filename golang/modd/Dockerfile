@@ -1,7 +1,5 @@
 FROM amery/docker-golang-base:latest
 
-RUN mkdir -p root/bin root/etc
-
 # modd
 RUN go get -v github.com/cortesi/modd/cmd/... && \
 	cp bin/modd root/ && \
