@@ -9,14 +9,14 @@ cat <<EOT
 # bind mounted inside the container
 #
 %: %.in \$(RULES_MK) \$(CONFIG_MK)
-	sed \\
+	@sed \\
 EOT
 for x; do
 	echo "$TAB$TAB-e 's|@@$x@@|\$($x)|g' \\"
-	done
+done
 
 	cat <<EOT
 		\$< > \$@~
-	mv \$@~ \$@
+	@if ! diff -u \$@ \$@~; then mv \$@~ \$@; else rm \$@~; fi 2> /dev/null
 EOT
 

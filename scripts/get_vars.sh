@@ -1,4 +1,7 @@
 #!/bin/sh
-[ $# -gt 0 ] || exit
 
-sed -e 's|\(@@[^@]\+@@\)|\n\1\n|g' -- "$@" | sed -n -e 's|^@@\([^@]\+\)@@$|\1|p' | sort -uV
+for f; do
+	if [ -s "$f" ]; then
+		sed -e 's|\(@@[^@]\+@@\)|\n\1\n|g' -- "$f" | sed -n -e 's|^@@\([^@]\+\)@@$|\1|p'
+	fi
+done | sort -uV

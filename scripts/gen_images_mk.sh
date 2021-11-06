@@ -51,6 +51,10 @@ for np in $FILES; do
 	df="${np#*:}"
 	d="${df%/*}"
 
+	name=${img%-*}
+	tag=${img##*-}
+
+	# FROM
 	from0=$(grep "^FROM" "$df" | head -n1 | sed -e 's/^FROM[ \t]\+//' -e 's/:.*//')
 	from=
 	for x in $IMAGES; do
@@ -60,6 +64,7 @@ for np in $FILES; do
 
 		[ -z "$from" ] || break
 	done
+
 	cat <<EOT
 
 # $df
@@ -72,7 +77,8 @@ push-$img: \$(B)/.$img
 
 \$(B)/.$img: \\
 	$(image_files "$d" "$df" ${from:+"\$(B)/.$from"})
-\$(B)/.$img: NAME=$img
+\$(B)/.$img: NAME=$name
+\$(B)/.$img: TAG=$tag
 \$(B)/.$img: DIR=$d
 EOT
 done
