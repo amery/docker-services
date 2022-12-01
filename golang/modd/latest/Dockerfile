@@ -1,7 +1,7 @@
 FROM amery/docker-golang-base:latest
 
 # modd
-RUN go get -v github.com/cortesi/modd/cmd/... && \
+RUN go install -v github.com/cortesi/modd/cmd/...@latest && \
 	cp bin/modd root/ && \
 	touch root/etc/modd.conf
 
