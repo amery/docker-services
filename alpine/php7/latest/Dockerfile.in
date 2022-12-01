@@ -1,5 +1,5 @@
 # vim: set ft=dockerfile ts=4 sw=4 et:
-FROM @@USER@@/docker-alpine-core:latest
+FROM @@USER@@/docker-alpine-core:3.15
 MAINTAINER @@MAINTAINER@@
 
 # Install PHP7
