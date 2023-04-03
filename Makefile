@@ -54,7 +54,7 @@ $(IMAGES_MK): $(GEN_IMAGES_MK_SH) $(IMAGE_DIRS) Makefile
 	@if ! diff -u $@ $@~; then mv $@~ $@; else rm $@~; fi 2> /dev/null
 
 $(IMAGE_DIRS): FORCE
-	@find */ -name Dockerfile -o -name Dockerfile.in | xargs -r dirname | sort -uV > $@~
+	@find -L */ -name Dockerfile -o -name Dockerfile.in | xargs -r dirname | sort -uV > $@~
 	@if ! diff -u $@ $@~; then mv $@~ $@; else rm $@~; fi 2> /dev/null
 
 include $(RULES_MK)
