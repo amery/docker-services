@@ -1,0 +1,44 @@
+# vim: set ft=dockerfile ts=4 sw=4 et:
+FROM @@USER@@/docker-alpine-core:3.16
+MAINTAINER @@MAINTAINER@@
+
+# Install PHP 8.1
+RUN apk --update upgrade -U && apk --no-cache add \
+        php8 \
+        php8-ctype \
+        php8-curl \
+        php8-dom \
+        php8-fileinfo \
+        php8-fpm \
+        php8-gd \
+        php8-iconv \
+        php8-intl \
+        php8-json \
+        php8-mbstring \
+        php8-mysqli \
+        php8-opcache \
+        php8-openssl \
+        php8-pcntl \
+        php8-pdo \
+        php8-pdo_mysql \
+        php8-phar \
+        php8-posix \
+        php8-session \
+        php8-tidy \
+        php8-xml \
+        php8-zip
+
+# php-composer
+ENV COMPOSER_PREFERRED 2
+RUN wget -qO /tmp/composer-setup.php https://getcomposer.org/installer && \
+    php /tmp/composer-setup.php --1 --install-dir=/usr/bin --filename=composer1 && \
+    php /tmp/composer-setup.php --2 --install-dir=/usr/bin --filename=composer2 && \
+    rm /tmp/composer-setup.php
+
+COPY 00-prepare-php8.sh /etc/entrypoint.d/
+
+# listen all interfaces
+RUN sed -i -e 's|^listen =.*|listen = 9000|' /etc/php8/php-fpm.d/www.conf
+
+# add php-fpm to supervisord
+COPY supervisord.conf /etc/supervisor.d/php-fpm.conf
