@@ -1,0 +1,46 @@
+# vim: set ft=dockerfile ts=4 sw=4 et:
+FROM amery/docker-alpine-core:3.18
+MAINTAINER Alejandro Mery <amery@linux.com>
+
+# Install PHP 8.2
+RUN apk --update upgrade -U && apk --no-cache add \
+        php82 \
+        php82-ctype \
+        php82-curl \
+        php82-dom \
+        php82-fileinfo \
+        php82-fpm \
+        php82-gd \
+        php82-iconv \
+        php82-intl \
+        php82-json \
+        php82-mbstring \
+        php82-mysqli \
+        php82-opcache \
+        php82-openssl \
+        php82-pcntl \
+        php82-pdo \
+        php82-pdo_mysql \
+        php82-phar \
+        php82-posix \
+        php82-session \
+        php82-tidy \
+        php82-xml \
+        php82-zip
+
+RUN ln -snf php82 /usr/bin/php
+
+# php-composer
+ENV COMPOSER_PREFERRED 2
+RUN wget -qO /tmp/composer-setup.php https://getcomposer.org/installer && \
+    php /tmp/composer-setup.php --1 --install-dir=/usr/bin --filename=composer1 && \
+    php /tmp/composer-setup.php --2 --install-dir=/usr/bin --filename=composer2 && \
+    rm /tmp/composer-setup.php
+
+COPY 00-prepare-php8.sh /etc/entrypoint.d/
+
+# listen all interfaces
+RUN sed -i -e 's|^listen =.*|listen = 9000|' /etc/php82/php-fpm.d/www.conf
+
+# add php-fpm to supervisord
+COPY supervisord.conf /etc/supervisor.d/php-fpm.conf
