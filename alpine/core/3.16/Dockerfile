@@ -1,0 +1,20 @@
+# vim: set ft=dockerfile ts=4 sw=4 et:
+FROM alpine:3.16
+MAINTAINER Alejandro Mery <amery@linux.com>
+
+# Install Supervisor, S6 and getent
+RUN apk --update upgrade -U && apk --no-cache add \
+    musl-utils \
+    s6 \
+    supervisor
+
+RUN mkdir -p \
+    /etc/entrypoint.d \
+    /etc/supervisor.d \
+    /var/log/supervisor
+
+COPY run-user.sh /usr/bin/run-user
+COPY supervisord.conf /etc/
+COPY entrypoint.sh /
+
+ENTRYPOINT [ "/entrypoint.sh" ]
