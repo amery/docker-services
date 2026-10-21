@@ -1,4 +1,4 @@
-FROM golang:1.21-alpine
+FROM golang:1.27.3-alpine3.24
 
 # disable CGO and rebuild
 ENV CGO_ENABLED=0
