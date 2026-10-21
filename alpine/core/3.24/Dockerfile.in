@@ -1,6 +1,6 @@
 # vim: set ft=dockerfile ts=4 sw=4 et:
-FROM alpine:3.18
-LABEL org.opencontainers.image.authors="Alejandro Mery <amery@apptly.co>" \
+FROM alpine:3.24
+LABEL org.opencontainers.image.authors="@@MAINTAINER@@" \
     org.opencontainers.image.source="https://github.com/amery/docker-services" \
     org.opencontainers.image.licenses="MIT"
 
