@@ -1,6 +1,8 @@
 # vim: set ft=dockerfile ts=4 sw=4 et:
-FROM amery/docker-alpine-core:latest
-MAINTAINER Alejandro Mery <amery@linux.com>
+FROM quay.io/amery/docker-alpine-core:latest
+LABEL org.opencontainers.image.authors="Alejandro Mery <amery@apptly.co>" \
+    org.opencontainers.image.source="https://github.com/amery/docker-services" \
+    org.opencontainers.image.licenses="MIT"
 
 ENV NGINX_VERSION 1.25.1
 ENV NJS_VERSION   0.8.0

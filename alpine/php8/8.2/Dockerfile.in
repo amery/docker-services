@@ -1,6 +1,8 @@
 # vim: set ft=dockerfile ts=4 sw=4 et:
 FROM @@PREFIX@@docker-alpine-core:3.18
-MAINTAINER @@MAINTAINER@@
+LABEL org.opencontainers.image.authors="@@MAINTAINER@@" \
+    org.opencontainers.image.source="https://github.com/amery/docker-services" \
+    org.opencontainers.image.licenses="MIT"
 
 # Install PHP 8.2
 RUN apk --update upgrade -U && apk --no-cache add \

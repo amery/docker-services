@@ -1,6 +1,8 @@
 # vim: set ft=dockerfile ts=4 sw=4 et:
 FROM alpine:3.15
-MAINTAINER Alejandro Mery <amery@linux.com>
+LABEL org.opencontainers.image.authors="Alejandro Mery <amery@apptly.co>" \
+    org.opencontainers.image.source="https://github.com/amery/docker-services" \
+    org.opencontainers.image.licenses="MIT"
 
 # Install Supervisor, S6 and getent
 RUN apk --update upgrade -U && apk --no-cache add \

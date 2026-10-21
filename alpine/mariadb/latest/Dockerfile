@@ -1,6 +1,8 @@
 # vim: set ft=dockerfile ts=4 sw=4 et:
-FROM amery/docker-alpine-core:latest
-MAINTAINER Alejandro Mery <amery@linux.com>
+FROM quay.io/amery/docker-alpine-core:latest
+LABEL org.opencontainers.image.authors="Alejandro Mery <amery@apptly.co>" \
+    org.opencontainers.image.source="https://github.com/amery/docker-services" \
+    org.opencontainers.image.licenses="MIT"
 
 # Install MariaDB
 RUN apk --update upgrade -U && apk --no-cache add \

@@ -1,4 +1,4 @@
-FROM amery/docker-golang-base:latest
+FROM quay.io/amery/docker-golang-base:latest
 
 # modd
 RUN go install -v github.com/cortesi/modd/cmd/...@latest && \

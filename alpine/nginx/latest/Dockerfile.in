@@ -1,6 +1,8 @@
 # vim: set ft=dockerfile ts=4 sw=4 et:
 FROM @@PREFIX@@docker-alpine-core:latest
-MAINTAINER @@MAINTAINER@@
+LABEL org.opencontainers.image.authors="@@MAINTAINER@@" \
+    org.opencontainers.image.source="https://github.com/amery/docker-services" \
+    org.opencontainers.image.licenses="MIT"
 
 ENV NGINX_VERSION 1.25.1
 ENV NJS_VERSION   0.8.0
