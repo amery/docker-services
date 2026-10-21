@@ -33,7 +33,7 @@ RUN apk --update upgrade -U && apk --no-cache add \
 RUN ln -snf php82 /usr/bin/php
 
 # php-composer
-ENV COMPOSER_PREFERRED 2
+ENV COMPOSER_PREFERRED=2
 RUN wget -qO /tmp/composer-setup.php https://getcomposer.org/installer && \
     php /tmp/composer-setup.php --1 --install-dir=/usr/bin --filename=composer1 && \
     php /tmp/composer-setup.php --2 --install-dir=/usr/bin --filename=composer2 && \

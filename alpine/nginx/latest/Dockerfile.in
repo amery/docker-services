@@ -4,9 +4,9 @@ LABEL org.opencontainers.image.authors="@@MAINTAINER@@" \
     org.opencontainers.image.source="https://github.com/amery/docker-services" \
     org.opencontainers.image.licenses="MIT"
 
-ENV NGINX_VERSION 1.25.1
-ENV NJS_VERSION   0.8.0
-ENV PKG_RELEASE   1
+ENV NGINX_VERSION=1.25.1
+ENV NJS_VERSION=0.8.0
+ENV PKG_RELEASE=1
 
 # The following will be installed from upstream:
 # nginx nginx-module-xslt nginx-module-geoip nginx-module-image-filter nginx-module-njs

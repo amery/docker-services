@@ -2,7 +2,7 @@ FROM golang:1.20-alpine
 
 # supervisord
 #
-ENV SUPERVISORD "0.7.3"
+ENV SUPERVISORD="0.7.3"
 
 RUN apk --update upgrade -U && apk --no-cache add \
 		gcc \
