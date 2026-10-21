@@ -1,4 +1,7 @@
-rules.mk
+.tmp/
+.alias-*
+.link-*
+.tag-dirs
+.image-*
 images.mk
-.images.mk
-.docker-*
+rules.mk

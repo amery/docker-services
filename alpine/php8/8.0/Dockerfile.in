@@ -1,5 +1,5 @@
 # vim: set ft=dockerfile ts=4 sw=4 et:
-FROM @@USER@@/docker-alpine-core:3.16
+FROM @@PREFIX@@docker-alpine-core:3.16
 MAINTAINER @@MAINTAINER@@
 
 # Install PHP 8.1

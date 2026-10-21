@@ -1,22 +1,44 @@
 #!/bin/sh
 
-TAB=$(printf "\t")
+DOLLAR="\$\$"
 
 cat <<EOT
-# use %.in as template to generate % but making
-# sure a sed error doesn't damage the file and
-# the inode isn't replaced because it could be
-# bind mounted inside the container
-#
-%: %.in \$(RULES_MK) \$(CONFIG_MK)
-	@sed \\
+export DOCKER
+SCRIPTS = $(dirname "$0")
+
 EOT
+
+# Render each template through settle, so a rendering that says the same
+# thing again leaves the file's mtime, and the image built from it, alone.
+# config.mk is in BUILD_SYS: it is only written when a variable is added.
+
+if [ $# -eq 0 ]; then
+	# no variable replacements
+	#
+	cat <<EOT
+%: %.in \$(RULES_MK) \$(CONFIG_MK)
+	\$(call settle,\$@,cat \$<,diff)
+
+\$(CONFIG_MK): \$(RULES_MK)
+	@:
+EOT
+	exit
+fi
+
+SED="sed"
 for x; do
-	echo "$TAB$TAB-e 's|@@$x@@|\$($x)|g' \\"
+	SED="$SED -e 's|@@$x@@|\$($x)|g'"
 done
 
-	cat <<EOT
-		\$< > \$@~
-	@if ! diff -u \$@ \$@~; then mv \$@~ \$@; else rm \$@~; fi 2> /dev/null
-EOT
+X="${DOLLAR}x"
+cat <<EOT
+%: %.in \$(RULES_MK) \$(CONFIG_MK)
+	\$(call settle,\$@,$SED \$<,diff)
 
+\$(CONFIG_MK): \$(RULES_MK)
+	@for x in $*; do \\
+		if ! grep -q "^$X " \$@ 2> /dev/null; then \\
+			echo "$X ?=" >> \$@; \\
+		fi; \\
+	done
+EOT
